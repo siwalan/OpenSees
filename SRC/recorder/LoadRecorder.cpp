@@ -26,12 +26,9 @@
 // At this time the LoadRecorder can read two types of LoadPattern, that is UniformExcitation and Nodal Load
 // Input: recorder LoadRecorder -file filename.txt -time -dt $double -pattern $integer
 // Options: -time and -dt are optional
-// 
-// Note: At this current time: -pattern can only take a single load Pattern
-// 
+//
 // If the pattern contain multiple nodal load. The result will be outputed as
 // time (If selected) NodalLoad1_DOF1 NodalLoad1_DOF2 ... NodalLoad1_DOFn NodalLoad2_DOF1 ... NodalLoadJ_DOFN
-// 
 
 #include <LoadRecorder.h> // This is Me
 
@@ -67,7 +64,7 @@ LoadRecorder::LoadRecorder(ID &loadPatternIDs, Domain &domainHandler, OPS_Stream
          loadIDs(i) = loadPatternIDs(i);
          LoadPattern* theLoadPattern = domainHandler.getLoadPattern(loadPatternIDs(i));
          if (theLoadPattern == NULL) {
-             opserr << "WARNING LoadRecorder::LoadRecorder() - No load pattern with tag: " << i << " exist in the Domain\n";
+             opserr << "WARNING LoadRecorder::LoadRecorder() - No load pattern with tag: " << loadIDs(i) << " exist in the Domain\n";
              exit(-1);
          }
      }
@@ -108,9 +105,10 @@ LoadRecorder::LoadRecorder(ID &loadPatternIDs, Domain &domainHandler, OPS_Stream
 
 LoadRecorder::~LoadRecorder()
 {
-    if (data != 0)
+    if (data != 0) {
         delete data;
-
+        delete loadTypes;
+    }
     theOutput->endTag(); // Data
     theOutput->endTag(); // OpenSeesOutput
 
