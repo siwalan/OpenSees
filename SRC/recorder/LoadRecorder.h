@@ -40,7 +40,7 @@ class LoadRecorder: public Recorder
 {
   public:
     LoadRecorder(
-        int loadID,
+        ID &loadIDs,
         Domain &theDomain,
         OPS_Stream &theOutput,
         double deltaT,
@@ -57,8 +57,9 @@ class LoadRecorder: public Recorder
 
   private:
 
-    int loadID;
-    int loadType;
+      ID loadIDs;
+      int loadIDSize;
+      Vector *loadTypes;
 
     // loadType
     // loadType = 0 (Nodal Load)
@@ -66,7 +67,7 @@ class LoadRecorder: public Recorder
 
     Domain *theDomain;
     OPS_Stream *theOutput;
-    Vector* data;
+    Vector *data;
 
     bool echoTimeFlag;   // flag indicating whether time to be included in o/p
 

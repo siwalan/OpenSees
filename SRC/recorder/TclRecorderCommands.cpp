@@ -1670,13 +1670,15 @@ enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BIN
 	 //////////////////////Start of LoadRecorder recorder////////////////////////////
 
 	 else if (strcmp(argv[1], "LoadRecorder") == 0) {
-	 int pos = 2;
-	 int patternID;
-	 double dT = 0.0;
-	 double rTolDt = 0.00001;
+		 int pos = 2;
+		 int numPattern = 0;
+		 int patternID = 0;
+		 ID patternIDs = 0;
+		 double dT = 0.0;
+		 double rTolDt = 0.00001;
 
-	 outputMode eMode = STANDARD_STREAM;       // enum found in DataOutputFileHandler.h
-	 bool echoTimeFlag = false;
+		 outputMode eMode = STANDARD_STREAM;       // enum found in DataOutputFileHandler.h
+		 bool echoTimeFlag = false;
 
 		 while (pos < argc) {
 			 if (strcmp(argv[pos], "-file") == 0) {
@@ -1702,16 +1704,20 @@ enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BIN
 					 return TCL_ERROR;
 					 pos += 2;
 			 } else if (strcmp(argv[pos], "-pattern") == 0) {
-				 if (Tcl_GetInt(interp, argv[pos+1], &patternID) != TCL_OK) {
-					 return TCL_ERROR;
+				 pos++;
+				 while (pos < argc && Tcl_GetInt(interp, argv[pos], &patternID) == TCL_OK) {
+					 (patternIDs)[numPattern] = patternID;
+					 numPattern++;
+					 pos++;
 				 }
-				 pos += 2;
+
 			 }
 		 }
 
-	 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0);
-	 (*theRecorder) = new LoadRecorder(patternID, theDomain, *theOutputStream, dT, rTolDt, echoTimeFlag);
+		 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0);
+		 (*theRecorder) = new LoadRecorder(patternIDs, theDomain, *theOutputStream, dT, rTolDt, echoTimeFlag);
 
+		 //LoadRecorder::LoadRecorder(ID& loadPatternIDs, Domain& domainHandler, OPS_Stream& outputHandler, double deltaT, double relDeltaTol, bool echoTimeFlag) :Recorder(RECORDER_TAGS_LoadRecorder), loadIDs(loadPatternIDs.Size()), theDomain(&domainHandler), theOutput(&outputHandler), deltaT(deltaT), relDeltaTTol(relDeltaTol), nextTimeStampToRecord(0.0), echoTimeFlag(echoTimeFlag), data(0), loadTypes(0)
 	 }
 
 	//////////////////////End of LoadRecorder recorder////////////////////////////

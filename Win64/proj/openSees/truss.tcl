@@ -49,20 +49,29 @@ set accelSeries "Series -dt 0.02 -filePath $filePath -factor $factor";	# define 
 pattern UniformExcitation 1 1 -accel $accelSeries;		# define where and how (pattern tag, dof) acceleration is applied
 timeSeries Constant 1 
 
-timeSeries Constant 2
+timeSeries Linear 2
 pattern Plain 2 2 {	
    # Create the nodal load - command: load nodeID xForce yForce
    load 4 100 -50
 }
 
-# recorder LoadRecorder -file test.txt -time  -pattern 2
-# recorder LoadRecorder -file test.txt -time  -pattern 1
+timeSeries Constant 3
+pattern Plain 3 3 {	
+   # Create the nodal load - command: load nodeID xForce yForce
+   load 4 100 -50
+}
+
+file mkdir TrussTest
+# recorder LoadRecorder -file TrussTest/ConstantLoad.txt -time  -pattern 3
+# recorder LoadRecorder -file TrussTest/LinearLoad.txt -time  -pattern 2
+# recorder LoadRecorder -file TrussTest/Earthquake.txt -time  -pattern 1
+recorder LoadRecorder -file TrussTest/Mixed.txt -time  -pattern 1 2 3
 
 
-# set t [getTime]
-# set ok 0
+set t [getTime]
+set ok 0
 
-# while {$t <= $endTime && $ok == 0} {
-#     set ok [analyze 1 $dt]
-#     set t [getTime]
-# }
+while {$t <= $endTime && $ok == 0} {
+    set ok [analyze 1 $dt]
+    set t [getTime]
+}
