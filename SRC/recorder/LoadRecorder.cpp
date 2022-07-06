@@ -18,14 +18,20 @@
 **                                                                    **
 ** ****************************************************************** */
                                                                         
-// Written: fmk 
-//
-// Description: This file contains the class definition for NodeRecorder.
-// A NodeRecorder is used to record the specified dof responses 
-// at a collection of nodes over an analysis. (between commitTag of 0 and
-// last commitTag).
-//
-// What: "@(#) NodeRecorder.C, revA"
+// Written: @siwalan
+// Created On: 2022-07-06 (YYYY-MM-DD)
+// Last Revised: 2022-07-06 (YYYY-MM-DD)
+// 
+// Description: This file contain the definitions for the LoadRecorder recorder
+// At this time the LoadRecorder can read two types of LoadPattern, that is UniformExcitation and Nodal Load
+// Input: recorder LoadRecorder -file filename.txt -time -dt $double -pattern $integer
+// Options: -time and -dt are optional
+// 
+// Note: At this current time: -pattern can only take a single load Pattern
+// 
+// If the pattern contain multiple nodal load. The result will be outputed as
+// time (If selected) NodalLoad1_DOF1 NodalLoad1_DOF2 ... NodalLoad1_DOFn NodalLoad2_DOF1 ... NodalLoadJ_DOFN
+// 
 
 #include <LoadRecorder.h> // This is Me
 
@@ -38,7 +44,6 @@
 #include <NodalLoad.h>
 #include <NodalLoadIter.h>
 #include <MapOfTaggedObjects.h>
-
 
 // LoadPatern Library
 #include <LoadPattern.h>

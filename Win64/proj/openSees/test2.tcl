@@ -50,5 +50,10 @@ pattern Plain 2 2 {
    # Create the nodal load - command: load nodeID xForce yForce
    load 3 100 -50 0
    load 4 200 -75 0
-
+   
 }
+
+recorder LoadRecorder -file test2.txt -time -pattern 2
+recorder LoadRecorder -file test3.txt -time -pattern 1
+
+analyze 1000 0.02
