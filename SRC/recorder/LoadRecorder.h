@@ -58,6 +58,11 @@ class LoadRecorder: public Recorder
   private:
 
     int loadID;
+    int loadType;
+
+    // loadType
+    // loadType = 0 (Nodal Load)
+    // loadType = 1 (Excitation Load)
 
     Domain *theDomain;
     OPS_Stream *theOutput;

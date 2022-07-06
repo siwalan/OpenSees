@@ -323,6 +323,16 @@ NodalLoad::getExternalForceSensitivity(int gradNumber)
 }
 
 
+int
+NodalLoad::getNodalLoadDOF(void) {
+    return (load ->Size());
+}
+
+double
+NodalLoad::getNodalLoad(int loadDOF) {
+    return ((*load)(loadDOF));
+}
+
 // AddingSensitivity:END //////////////////////////////////////
 
 

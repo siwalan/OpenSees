@@ -35,6 +35,9 @@
 #include <Vector.h> 
 #include <ID.h>
 #include <FE_Datastore.h>
+#include <NodalLoad.h>
+#include <NodalLoadIter.h>
+#include <MapOfTaggedObjects.h>
 
 
 // LoadPatern Library
@@ -49,7 +52,7 @@
 using std::ios;
 
 
-LoadRecorder::LoadRecorder(int loadID, Domain &domainHandler, OPS_Stream &outputHandler, double deltaT, double relDeltaTol, bool echoTimeFlag) :Recorder(RECORDER_TAGS_LoadRecorder), loadID(loadID), theDomain(&domainHandler), theOutput(&outputHandler), deltaT(deltaT), relDeltaTTol(relDeltaTol), nextTimeStampToRecord(0.0), echoTimeFlag(echoTimeFlag), data(0)
+LoadRecorder::LoadRecorder(int loadID, Domain &domainHandler, OPS_Stream &outputHandler, double deltaT, double relDeltaTol, bool echoTimeFlag) :Recorder(RECORDER_TAGS_LoadRecorder), loadID(loadID), theDomain(&domainHandler), theOutput(&outputHandler), deltaT(deltaT), relDeltaTTol(relDeltaTol), nextTimeStampToRecord(0.0), echoTimeFlag(echoTimeFlag), data(0), loadType(0)
 
 {
     LoadPattern *theLoadPattern = domainHandler.getLoadPattern(loadID);
@@ -65,8 +68,25 @@ LoadRecorder::LoadRecorder(int loadID, Domain &domainHandler, OPS_Stream &output
         theOutput->endTag();
         numDbColumns += 1;
     }
-    
-    numDbColumns += 1;
+
+    NodalLoad* theNodalLoad = 0;
+    NodalLoadIter &theNodalIter = theLoadPattern->getNodalLoads();
+
+    int numberOfNodalLoad = 0;
+
+    while ((theNodalLoad = theNodalIter()) != 0) {
+        numberOfNodalLoad += (theNodalLoad->getNodalLoadDOF());
+    }
+
+    if (numberOfNodalLoad > 0) {
+        numDbColumns += numberOfNodalLoad;
+        loadType = 0;
+    } else {
+        // If there is no nodal load, assume that this load Pattern is only Excitation Load.
+        // Thus only one Result.
+        numDbColumns += 1;
+        loadType = 1;
+    }
 
     data = new Vector(numDbColumns);
     theOutput->tag("Data");
@@ -101,8 +121,24 @@ int LoadRecorder::record(int commitTag, double timeStamp)
         }
 
         LoadPattern* theLoadPattern = theDomain->getLoadPattern(loadID);
-        (*data)(counter++) = theLoadPattern->getLoadFactor();
 
+        if (loadType == 1) {
+            (*data)(counter++) = theLoadPattern->getLoadFactor();
+        }
+        else if (loadType == 0) {
+            double loadPatternLoadFactor = theLoadPattern->getLoadFactor();
+
+            NodalLoad* theNodalLoad = 0;
+            NodalLoadIter& theNodalIter = theLoadPattern->getNodalLoads();
+
+            while ((theNodalLoad = theNodalIter()) != 0) {
+                int nDOF = (theNodalLoad->getNodalLoadDOF());
+                for (int dofIterator = 0; dofIterator < nDOF; dofIterator++) {
+                    (*data)(counter++) = theNodalLoad->getNodalLoad(dofIterator) * loadPatternLoadFactor;
+                }
+            }
+
+        }
 
     }
 
