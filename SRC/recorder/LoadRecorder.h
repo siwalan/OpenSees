@@ -57,17 +57,17 @@ class LoadRecorder: public Recorder
 
   private:
 
-     ID loadIDs;
-     int loadIDSize;
-     Vector *loadTypes;
-     Vector *data;
+      ID loadIDs;
+      int loadIDSize;
+      Vector *loadTypes;
 
     // loadType
     // loadType = 0 (Nodal Load)
     // loadType = 1 (Excitation Load)
 
-    Domain *theDomain; // This is logical because there is only one single domain
-    OPS_Stream *theOutput; // For this... cannot comment much.
+    Domain *theDomain;
+    OPS_Stream *theOutput;
+    Vector *data;
 
     bool echoTimeFlag;   // flag indicating whether time to be included in o/p
 

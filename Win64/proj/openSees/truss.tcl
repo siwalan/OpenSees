@@ -66,7 +66,6 @@ file mkdir TrussTest
 # recorder LoadRecorder -file TrussTest/LinearLoad.txt -time  -pattern 2
 # recorder LoadRecorder -file TrussTest/Earthquake.txt -time  -pattern 1
 recorder LoadRecorder -file TrussTest/Mixed.txt -time  -pattern 1 2 3
-recorder LoadRecorder -file TrussTest/Mixed.txt -time  -pattern 4
 
 
 set t [getTime]
