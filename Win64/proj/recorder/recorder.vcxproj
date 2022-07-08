@@ -199,6 +199,7 @@
     <ClCompile Include="..\..\..\SRC\recorder\FilePlotter.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\GmshRecorder.cpp" />
     <ClCompile Include="..\..\..\Src\recorder\GSA_Recorder.cpp" />
+    <ClCompile Include="..\..\..\SRC\recorder\LoadRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\MaxNodeDispRecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\MPCORecorder.cpp" />
     <ClCompile Include="..\..\..\SRC\recorder\NodeRecorder.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\..\..\SRC\recorder\ElementRecorderRMS.h" />
     <ClInclude Include="..\..\..\SRC\recorder\EnvelopeDriftRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\GmshRecorder.h" />
+    <ClInclude Include="..\..\..\SRC\recorder\LoadRecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\MPCORecorder.h" />
     <ClInclude Include="..\..\..\SRC\recorder\NodeRecorderRMS.h" />
     <ClInclude Include="..\..\..\SRC\recorder\NormElementRecorder.h" />
