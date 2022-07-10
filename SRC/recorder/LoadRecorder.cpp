@@ -44,6 +44,9 @@
 #include <NodalLoad.h>
 #include <NodalLoadIter.h>
 #include <MapOfTaggedObjects.h>
+#include <StandardStream.h>
+#include <DataFileStream.h>
+#include <elementAPI.h>
 
 // LoadPatern Library
 #include <LoadPattern.h>
@@ -56,6 +59,87 @@
 #include <iomanip>
 using std::ios;
 
+void*
+OPS_LoadRecorder()
+{
+    if (OPS_GetNumRemainingInputArgs() < 2) {
+        opserr << "WARNING: recorder Load ";
+        opserr << "-file <fileName> -pattern response";
+        return 0;
+    }
+
+    OPS_Stream* theOutputStream = 0;
+    const char* filename = 0;
+
+    int numPattern = 0;
+    int patternID = 0;
+    ID patternIDs = 0;
+    double dT = 0.0;
+    double rTolDt = 0.00001;
+    bool echoTimeFlag = false;
+
+    const int STANDARD_STREAM = 0;
+    const int DATA_STREAM = 1;
+
+    int eMode = STANDARD_STREAM;
+
+    while (OPS_GetNumRemainingInputArgs() > 0) {
+
+        const char* option = OPS_GetString();
+
+
+        if (strcmp(option, "-file") == 0) {
+            if (OPS_GetNumRemainingInputArgs() > 0) {
+                filename = OPS_GetString();
+            }
+            eMode = DATA_STREAM;
+        }
+        else if (strcmp(option, "-time") == 0) {
+            echoTimeFlag = true;
+        }
+        else if (strcmp(option, "-dT") == 0) {
+            if (OPS_GetNumRemainingInputArgs() > 0) {
+                int num = 1;
+                if (OPS_GetDoubleInput(&num, &dT) < 0) {
+                    opserr << "WARNING: failed to read dT\n";
+                    return 0;
+                }
+            }
+        }
+        else if (strcmp(option, "-rTolDt") == 0) {
+            if (OPS_GetNumRemainingInputArgs() > 0) {
+                int num = 1;
+                if (OPS_GetDoubleInput(&num, &rTolDt) < 0) {
+                    opserr << "WARNING: failed to read rTolDt\n";
+                    return 0;
+                }
+            }
+        }
+        else if (strcmp(option, "-pattern") == 0) {
+            if (OPS_GetNumRemainingInputArgs() > 0) {
+                int num = 1;
+                int patternID;
+                if (OPS_GetIntInput(&num, &patternID) < 0) {
+                    OPS_ResetCurrentInputArg(-1);
+                    break;
+                }
+                (patternIDs)[numPattern] = patternID;
+                numPattern++;
+
+            }
+        }
+    }
+
+    theOutputStream = new DataFileStream(filename, OVERWRITE, 2, 0);
+
+
+    Domain* domain = OPS_GetDomain();
+    if (domain == 0)
+        return 0;
+    LoadRecorder* recorder = new LoadRecorder(patternIDs, *domain, *theOutputStream, dT, rTolDt, echoTimeFlag);
+
+    return recorder;
+}
 
 LoadRecorder::LoadRecorder(ID &loadPatternIDs, Domain &domainHandler, OPS_Stream &outputHandler, double deltaT, double relDeltaTol, bool echoTimeFlag):Recorder(RECORDER_TAGS_LoadRecorder), loadIDs(loadPatternIDs.Size()), theDomain(&domainHandler), theOutput(&outputHandler), deltaT(deltaT), relDeltaTTol(relDeltaTol), nextTimeStampToRecord(0.0), echoTimeFlag(echoTimeFlag), data(0), loadTypes(0)
 
@@ -153,9 +237,9 @@ int LoadRecorder::record(int commitTag, double timeStamp)
                 }
             }
         }
+        theOutput->write(*data);
     }
 
-    theOutput->write(*data);
 
     // successful completion - return 0
     return result;

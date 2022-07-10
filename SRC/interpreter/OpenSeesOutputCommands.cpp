@@ -81,6 +81,8 @@ void* OPS_EnvelopeElementRecorder();
 void* OPS_PVDRecorder();
 void* OPS_AlgorithmRecorder();
 void* OPS_RemoveRecorder();
+void* OPS_LoadRecorder();
+
 #ifdef _HDF5
 void* OPS_MPCORecorder();
 #endif
@@ -106,6 +108,7 @@ namespace {
         recordersMap.insert(std::make_pair("Node", &OPS_NodeRecorder));
         recordersMap.insert(std::make_pair("EnvelopeNode", &OPS_EnvelopeNodeRecorder));
         recordersMap.insert(std::make_pair("Element", &OPS_ElementRecorder));
+        recordersMap.insert(std::make_pair("LoadRecorder", &OPS_ElementRecorder));
         recordersMap.insert(std::make_pair("EnvelopeElement", &OPS_EnvelopeElementRecorder));
 	recordersMap.insert(std::make_pair("PVD", &OPS_PVDRecorder));
 	recordersMap.insert(std::make_pair("BgPVD", &OPS_PVDRecorder));
