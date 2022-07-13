@@ -1717,7 +1717,6 @@ enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BIN
 		 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0);
 		 (*theRecorder) = new LoadRecorder(patternIDs, theDomain, *theOutputStream, dT, rTolDt, echoTimeFlag);
 
-		 //LoadRecorder::LoadRecorder(ID& loadPatternIDs, Domain& domainHandler, OPS_Stream& outputHandler, double deltaT, double relDeltaTol, bool echoTimeFlag) :Recorder(RECORDER_TAGS_LoadRecorder), loadIDs(loadPatternIDs.Size()), theDomain(&domainHandler), theOutput(&outputHandler), deltaT(deltaT), relDeltaTTol(relDeltaTol), nextTimeStampToRecord(0.0), echoTimeFlag(echoTimeFlag), data(0), loadTypes(0)
 	 }
 
 	//////////////////////End of LoadRecorder recorder////////////////////////////
