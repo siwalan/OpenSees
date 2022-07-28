@@ -55,6 +55,7 @@
  #include <EnvelopeElementRecorder.h>
  #include <NormElementRecorder.h>
  #include <NormEnvelopeElementRecorder.h>
+ #include <LoadRecorder.h>
 
  #include <PVDRecorder.h>
 
@@ -1665,6 +1666,60 @@ enum outputMode  {STANDARD_STREAM, DATA_STREAM, XML_STREAM, DATABASE_STREAM, BIN
 						    theDomain, *theOutputStream, echoTimeFlag);
 
      }
+
+	 //////////////////////Start of LoadRecorder recorder////////////////////////////
+
+	 else if (strcmp(argv[1], "LoadRecorder") == 0) {
+		 int pos = 2;
+		 int numPattern = 0;
+		 int patternID = 0;
+		 ID patternIDs = 0;
+		 double dT = 0.0;
+		 double rTolDt = 0.00001;
+
+		 outputMode eMode = STANDARD_STREAM;       // enum found in DataOutputFileHandler.h
+		 bool echoTimeFlag = false;
+
+		 while (pos < argc) {
+			 if (strcmp(argv[pos], "-file") == 0) {
+				 fileName = argv[pos + 1];
+				 eMode = DATA_STREAM;
+				 const char* pwd = getInterpPWD(interp);
+				 simulationInfo.addOutputFile(fileName, pwd);
+				 pos += 2;
+			 } else if (strcmp(argv[pos], "-time") == 0) {
+				 echoTimeFlag = true;
+				 pos += 1;
+			 } else if (strcmp(argv[pos], "-dT") == 0) {
+				 // allow user to specify time step size for recording
+				 if (Tcl_GetDouble(interp, argv[pos+1], &dT) != TCL_OK) {
+					opserr << "WARNING recorder dT timestep is not specified! \n";
+					return TCL_ERROR; 
+				 }				 
+				 pos += 2;
+
+			 } else if (strcmp(argv[pos], "-rTolDt") == 0) {
+				 if (Tcl_GetDouble(interp, argv[pos+11], &rTolDt) != TCL_OK)
+					 opserr << "WARNING recorder rTolDt  is not specified! \n";
+					 return TCL_ERROR;
+					 pos += 2;
+			 } else if (strcmp(argv[pos], "-pattern") == 0) {
+				 pos++;
+				 while (pos < argc && Tcl_GetInt(interp, argv[pos], &patternID) == TCL_OK) {
+					 (patternIDs)[numPattern] = patternID;
+					 numPattern++;
+					 pos++;
+				 }
+
+			 }
+		 }
+
+		 theOutputStream = new DataFileStream(fileName, OVERWRITE, 2, 0);
+		 (*theRecorder) = new LoadRecorder(patternIDs, theDomain, *theOutputStream, dT, rTolDt, echoTimeFlag);
+
+	 }
+
+	//////////////////////End of LoadRecorder recorder////////////////////////////
 
      // a recorder for the graphical display of the domain
      else if (strcmp(argv[1],"display") == 0) {
