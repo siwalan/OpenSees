@@ -17,57 +17,37 @@
 **   Filip C. Filippou (filippou@ce.berkeley.edu)                     **
 **                                                                    **
 ** ****************************************************************** */
+                                                                        
+// $Revision: 1.3 $
+// $Date: 2005-12-14 23:49:48 $
+// $Source: /usr/local/cvs/OpenSees/SRC/matrix/main.cpp,v $
+                                                                        
+                                                                        
+#include "Vector.h"
+#include "ID.h"
+#include "Matrix.h"
 
-// $Revision$
-// $Date$
+#include <ElasticIsotropicThreeDimensional.h>
 
-#ifndef _PythonStream
-#define _PythonStream
-
+#include <OPS_Globals.h>
 #include <StandardStream.h>
-#include <Python.h>
-#include <sstream>
 
-class PythonStream : public StandardStream {
-public:
-  PythonStream(int indentSize = 2, bool echo = true, bool standard_echo = false);
+StandardStream sserr;
+OPS_Stream *opserrPtr = &sserr;
 
-
-  ~PythonStream();
-
-  void setError(PyObject *err);
-  int setFile(const char *fileName, openMode mode, bool echo);
-  OPS_Stream &operator<<(char c);
-  OPS_Stream &operator<<(unsigned char c);
-  OPS_Stream &operator<<(signed char c);
-  OPS_Stream &operator<<(const char *s);
-  OPS_Stream &operator<<(const unsigned char *s);
-  OPS_Stream &operator<<(const signed char *s);
-  OPS_Stream &operator<<(int n);
-  OPS_Stream &operator<<(unsigned int n);
-  OPS_Stream &operator<<(long n);
-  OPS_Stream &operator<<(unsigned long n);
-  OPS_Stream &operator<<(short n);
-  OPS_Stream &operator<<(unsigned short n);
-  OPS_Stream &operator<<(bool b);
-  OPS_Stream &operator<<(double n);
-  OPS_Stream &operator<<(float n);
-  OPS_Stream &operator<<(const void *p);
-
-private:
-  template<class T>void err_out(T err);
-  PyObject *error;
-  std::string msg;
-  bool echoApplication;
-};
-
-template<class T>void PythonStream::err_out(T err)
+int main()
 {
-  std::stringstream ss;
-  ss << err;
-  msg = ss.str();
-  PySys_FormatStderr(msg.c_str());
+  //                                      tag     E      nu  rho
+  ElasticIsotropicThreeDimensional material(1, 29000.0, 0.3, 0.0);
+
+  Vector strain(6); // 11,22,33,12,23,31
+  strain(0) = 0.002;
+
+  material.setTrialStrain(strain);
+  const Vector &stress = material.getStress();
+  const Matrix &tangent = material.getTangent();
+  opserr << stress << tangent << endln;
 }
 
 
-#endif
+
