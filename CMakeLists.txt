@@ -309,7 +309,7 @@ if(MKL_FOUND)
   set (SCALAPACK_LIBRARIES ${MKL_LIBRARIES})
 else()
   message(STATUS "MKL NOT found.")
-  set(SCALAPACK_LIBRARIES "/usr/lib/x86_64-linux-gnu/libmkl_blacs_openmpi_lp64.so;/usr/lib/x86_64-linux-gnu/libscalapack-openmpi.so.2.1")
+  set(SCALAPACK_LIBRARIES "/usr/lib/x86_64-linux-gnu/libscalapack-openmpi.so.2.1")
 endif()
   
 get_cmake_property(_variableNames VARIABLES)
