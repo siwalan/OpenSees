@@ -72,25 +72,25 @@ TransformationDOF_Group::TransformationDOF_Group(int tag, Node *node,
     modNumDOF = numConstrainedNodeRetainedDOF + numRetainedNodeDOF;
 
     // create space for the SP_Constraint array
-    theSPs = new SP_Constraint *[numNodalDOF];
-    for (int ii=0; ii<numNodalDOF; ii++) 
-	theSPs[ii] = 0;
+    theSPs = new SP_Constraint * [numNodalDOF];
+    for (int ii = 0; ii < numNodalDOF; ii++)
+        theSPs[ii] = 0;
 
     /***********************
     // set the SP_Constraint corresponding to the dof in modID
     Domain *theDomain=node->getDomain();
-    int nodeTag = node->getTag();    
+    int nodeTag = node->getTag();
     SP_ConstraintIter &theSPIter = theDomain->getSPs();
     SP_Constraint *sp;
     while ((sp = theSPIter()) != 0) {
-	if (sp->getNodeTag() == nodeTag) {
-	    int dof = sp->getDOF_Number();
-	    int loc = 0;
-	    for (int i=0; i<dof; i++) 
-		if (constrainedDOF.getLocation(i) < 0)
-		    loc++;
-	    theSPs[loc] = sp;
-	}
+    if (sp->getNodeTag() == nodeTag) {
+        int dof = sp->getDOF_Number();
+        int loc = 0;
+        for (int i=0; i<dof; i++)
+        if (constrainedDOF.getLocation(i) < 0)
+            loc++;
+        theSPs[loc] = sp;
+    }
     }
     *******************/
      
@@ -106,18 +106,19 @@ TransformationDOF_Group::TransformationDOF_Group(int tag, Node *node,
 	exit(-1);
     }
 
-    // initially set the id values to -2 for any dof still due to constrained node
-    for (int i=0; i<numConstrainedNodeRetainedDOF; i++)
-	(*modID)(i) = -2;
-    
-    // for all the constrained dof values set to -1
-    for (int j=numConstrainedNodeRetainedDOF; j<modNumDOF; j++)
-	(*modID)(j) = -1;
+    // Set Value of modID(i) to -2 if the node is not constrained by another node
+    // Set Value of modID(i) to -1 of tje node is constrained by another node
 
-    // for all the dof corresponding to the retained node set initially to -1
-    // we don't initially assign these equation nos. - this is done in doneID()
-    for (int k=numConstrainedNodeRetainedDOF; k<modNumDOF; k++)
-	(*modID)(k) = -1;
+    // Set all the modID to -2
+    for (int i = 0; i < numNodalDOF; i++)
+        (*modID)(i) = -2;
+
+    for (int i = 0; i < numRetainedNodeDOF; i++) {
+        int retainedDOF_DOF = retainedDOF(i);
+        (*modID)(retainedDOF_DOF) = -1;
+    }
+
+    
     
     // if this is the first TransformationDOF_Group we now
     // create the arrays used to store pointers to class wide
@@ -891,7 +892,7 @@ TransformationDOF_Group::doneID(void)
   for (int i=0; i<numRetainedNodeDOF; i++) {
     int dof = retainedDOF(i);
     int id = otherID(dof);
-    (*modID)(i+numRetainedDOF) = id;
+    (*modID)(dof) = id;
   }
   
   // if constraint is not time-varying determine the transformation matrix
