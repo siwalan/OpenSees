@@ -53,7 +53,8 @@ class TransformationDOF_Group: public DOF_Group
     
     // methods dealing with the ID and transformation matrix
     int doneID(void);    
-    const ID &getID(void) const; 
+    const ID &getID(void) const;
+
     virtual void setID(int dof, int value);    
     Matrix *getT(void);
     virtual int getNumDOF(void) const;    
