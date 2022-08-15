@@ -1116,10 +1116,10 @@ bool H5DRM::drm_direct_read(double t)
 		bool nanfound = false;
 		for (int i = 0; i < 3; ++i)
 		{
-			if ( isnan(d1[i])  ||
-			        isnan(a1[i])  ||
-			        isnan(d2[i])  ||
-			        isnan(a2[i]) )
+			if ( ::isnan(d1[i])  ||
+			        ::isnan(a1[i])  ||
+			        ::isnan(d2[i])  ||
+			        ::isnan(a2[i]) )
 			{
 				nanfound = true;
 			}
@@ -1301,10 +1301,10 @@ bool H5DRM::drm_differentiate_displacements(double t)
 		for (int i = 0; i < 3; ++i)
 		{
 
-			if ( isnan(d1[i])  ||
-			        isnan(a1[i])  ||
-			        isnan(d2[i])  ||
-			        isnan(a2[i]) )
+			if ( ::isnan(d1[i])  ||
+			        ::isnan(a1[i])  ||
+			        ::isnan(d2[i])  ||
+			        ::isnan(a2[i]) )
 			{
 				nanfound = true;
 			}
@@ -1782,9 +1782,9 @@ H5DRM::ComputeDRMLoads(double t)
 					DRMForces( 3 * local_pos  + 2) +=  Fk(3 * k  + 2) + Fm(3 * k  + 2);
 
 
-					if (isnan(DRMForces( 3 * local_pos  + 0) ) ||
-					        isnan(DRMForces( 3 * local_pos  + 1) ) ||
-					        isnan(DRMForces( 3 * local_pos  + 2) ) )
+					if (::isnan(DRMForces( 3 * local_pos  + 0) ) ||
+					        ::isnan(DRMForces( 3 * local_pos  + 1) ) ||
+					        ::isnan(DRMForces( 3 * local_pos  + 2) ) )
 					{
 						H5DRMerror << "NAN Detected!!! \n";
 						H5DRMerror << "    nodeTag = " << nodeTag << endln;

@@ -19,6 +19,7 @@ target_sources(OPS_Recorder
       GmshRecorder.cpp
       MaxNodeDispRecorder.cpp
       NodeRecorder.cpp
+      LoadRecorder.cpp
       NodeRecorderRMS.cpp
       NormElementRecorder.cpp
       NormEnvelopeElementRecorder.cpp
@@ -40,6 +41,7 @@ target_sources(OPS_Recorder
       GmshRecorder.h
       MaxNodeDispRecorder.h
       NodeRecorder.h
+      LoadRecorder.h
       NodeRecorderRMS.h
       NormElementRecorder.h
       NormEnvelopeElementRecorder.h
