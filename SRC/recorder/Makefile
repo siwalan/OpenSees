@@ -11,6 +11,7 @@ OBJS       = Recorder.o \
 	ElementRecorder.o \
 	ElementRecorderRMS.o \
 	NodeRecorder.o \
+	LoadRecorder.o \
 	NodeRecorderRMS.o \
 	EnvelopeElementRecorder.o \
 	NormElementRecorder.o \

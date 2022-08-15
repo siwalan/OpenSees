@@ -405,6 +405,8 @@ endif
 RECORDER_LIBS = $(FE)/recorder/Recorder.o \
 	$(FE)/recorder/DatastoreRecorder.o \
 	$(FE)/recorder/NodeRecorder.o \
+	$(FE)/recorder/LoadRecorder.o \
+	$(FE)/recorder/EnvelopeNodeRecorder.o \
 	$(FE)/recorder/EnvelopeNodeRecorder.o \
 	$(FE)/recorder/DriftRecorder.o \
 	$(FE)/recorder/EnvelopeDriftRecorder.o \
